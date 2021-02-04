@@ -14,7 +14,7 @@
 [https://github.com/xiaomai0830/leaflet-image-hotspots](https://github.com/xiaomai0830/leaflet-image-hotspots "https://github.com/xiaomai0830/leaflet-image-hotspots") <br/>
 [https://github.com/ZanwingMak/leaflet-image-hotspots](https://github.com/ZanwingMak/leaflet-image-hotspots)
 
-##设置比例尺 <br/>
+## 设置比例尺 <br/>
 1.点击比例尺时激活地图点击事件
 ```javascript
 function createScale(e) {
@@ -99,7 +99,7 @@ function scale_end(e){
 }
 ```
 
-###重新设置图形上的文本(显示面积于图形上)
+### 重新设置图形上的文本(显示面积于图形上)
 ```javascript
 function resetText(layer){
     let id = layer._leaflet_id;

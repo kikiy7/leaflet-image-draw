@@ -11,7 +11,7 @@
 基于[leaflet-image-hotspots](https://github.com/ZanwingMak/leaflet-image-hotspots)  实现热点图像区域编辑功能，能够在图片上绘制、编辑、删除图形区域以及文字说明。
 
 ### Github
-[https://github.com/xiaomai0830/leaflet-image-hotspots](https://github.com/xiaomai0830/leaflet-image-hotspots "https://github.com/xiaomai0830/leaflet-image-hotspots")
+[https://github.com/xiaomai0830/leaflet-image-hotspots](https://github.com/xiaomai0830/leaflet-image-hotspots "https://github.com/xiaomai0830/leaflet-image-hotspots")<br/>
 [https://github.com/ZanwingMak/leaflet-image-hotspots](https://github.com/ZanwingMak/leaflet-image-hotspots)
 
 ##设置比例尺

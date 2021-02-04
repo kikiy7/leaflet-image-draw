@@ -14,7 +14,7 @@
 [https://github.com/xiaomai0830/leaflet-image-hotspots](https://github.com/xiaomai0830/leaflet-image-hotspots "https://github.com/xiaomai0830/leaflet-image-hotspots") <br/>
 [https://github.com/ZanwingMak/leaflet-image-hotspots](https://github.com/ZanwingMak/leaflet-image-hotspots)
 
-##设置比例尺
+##设置比例尺 <br/>
 1.点击比例尺时激活地图点击事件
 ```javascript
 function createScale(e) {

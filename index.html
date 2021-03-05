@@ -266,16 +266,32 @@
             let image = new Image();
             image.src = map_img[0].src;
             svg.onload = function(){
-                canvas.width = image.width;
-                canvas.height = image.height;
-                context.drawImage(image,0,0);
-                context.globalCompositeOperation="source-over";
-                let left = map_img.offset().left - svgContainer.offset().left,
-                    top =  map_img.offset().top - svgContainer.offset().top;
-                context.drawImage(svg,left-offset_x,top-offset_y,map_img_width,map_img_height,0,0,image.width,image.height);
+                let imgdefereds=[];
+                let dfd = $.Deferred();
+                $(image).bind('load',function(){
+                    dfd.resolve();
+                }).bind('error',function(){
+                    //图片加载错误，加入错误处理
+                    // dfd.resolve();
+                })
+                if(image.complete) setTimeout(function(){
+                    console.log("图片加载完成");
+                    dfd.resolve();
+                },1000);
+                imgdefereds.push(dfd);
 
-                //下载
-                downloadCanvas(canvas);
+                $.when.apply(null,imgdefereds).done(function(){
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    context.drawImage(image,0,0);
+                    context.globalCompositeOperation="source-over";
+                    let left = map_img.offset().left - svgContainer.offset().left,
+                        top =  map_img.offset().top - svgContainer.offset().top;
+                    context.drawImage(svg,left-offset_x,top-offset_y,map_img_width,map_img_height,0,0,image.width,image.height);
+
+                    //下载
+                    downloadCanvas(canvas);
+                }
             }
         });
     }

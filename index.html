@@ -241,11 +241,8 @@
         download();
     });
 
-    function drawCanvas() {
+    function initCanvasData() {
         let svgHtml =  $('svg.leaflet-zoom-animated')[0];
-        // var canvas = document.createElement('canvas');  //准备空画布
-        let canvas = document.getElementById("downloadCanvas");  //准备空画布
-        let context = canvas.getContext('2d');  //取得画布的2d绘图上下文
 
         //获取img图层数据，以便canvas剪切这块区域的svg
         let map_img = $("img.leaflet-image-layer.leaflet-zoom-animated");
@@ -258,6 +255,8 @@
         let offset_x = svgContainer.width() - mapContainer.width();
         let offset_y = svgContainer.height() - mapContainer.height();
         console.log(offset_x,offset_y); //这里svg图层比map容器多了宽和高，下面context.drawImage时减去，否则会有偏移量
+        let left = map_img.offset().left - svgContainer.offset().left,
+            top =  map_img.offset().top - svgContainer.offset().top;
 
         //调用方法转换即可，转换结果就是uri,
         svgAsPngUri(svgHtml, null, function(uri) {
@@ -266,34 +265,35 @@
             let image = new Image();
             image.src = map_img[0].src;
             svg.onload = function(){
-                let imgdefereds=[];
-                let dfd = $.Deferred();
-                $(image).bind('load',function(){
-                    dfd.resolve();
-                }).bind('error',function(){
-                    //图片加载错误，加入错误处理
-                    // dfd.resolve();
-                })
-                if(image.complete) setTimeout(function(){
-                    console.log("图片加载完成");
-                    dfd.resolve();
-                },1000);
-                imgdefereds.push(dfd);
-
-                $.when.apply(null,imgdefereds).done(function(){
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-                    context.drawImage(image,0,0);
-                    context.globalCompositeOperation="source-over";
-                    let left = map_img.offset().left - svgContainer.offset().left,
-                        top =  map_img.offset().top - svgContainer.offset().top;
-                    context.drawImage(svg,left-offset_x,top-offset_y,map_img_width,map_img_height,0,0,image.width,image.height);
-
+                if(image.complete) {
+                    let canvas = drawCanvas(image,svg,left-offset_x,top-offset_y,map_img_width,map_img_height);
                     //下载
                     downloadCanvas(canvas);
-                });
+                }else{
+                    $(image).bind('load',function(){
+                        let canvas = drawCanvas(image,svg,left-offset_x,top-offset_y,map_img_width,map_img_height);
+                        //下载
+                        downloadCanvas(canvas);
+                    }).bind('error',function(){
+                        //图片加载错误，加入错误处理
+                        // dfd.resolve();
+                    })
+                }
             }
         });
+    }
+
+    function drawCanvas(image,svg,location_x,location_y,svg_width,svg_height){
+        // let canvas = document.createElement('canvas');  //准备空画布
+        let canvas = document.getElementById("downloadCanvas");  //准备空画布
+        let context = canvas.getContext('2d');  //取得画布的2d绘图上下文
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image,0,0);
+        context.globalCompositeOperation="source-over";
+        context.drawImage(svg,location_x,location_y,svg_width,svg_height,0,0,image.width,image.height);
+
+        return canvas;
     }
 
     //解决原图过大时下载失败问题
@@ -319,7 +319,7 @@
 
     function download(){
         map.fitBounds(map_bound); //恢复整个图像可视范围，为了裁取居于图像上的svg图层
-        setTimeout(drawCanvas,500);
+        setTimeout(initCanvasData,500);
     }
 
 
